@@ -34,7 +34,7 @@ def homomorphic_filter(image, gamma_l=0.5, gamma_h=2.0, cutoff=30, order=1):
 image = cv2.imread('Code/Images/input/car.jpg', cv2.IMREAD_GRAYSCALE)
 filtered_image = homomorphic_filter(image)
 # Αποθήκευση εικόνας 
-cv2.imwrite('Code/Images/output/car.jpg', filtered_image)
+cv2.imwrite('Code/Images/output/ex7.jpg', filtered_image)
 
 # === Εμφάνιση αποτελεσμάτων ===
 plt.figure(figsize=(12, 6))
