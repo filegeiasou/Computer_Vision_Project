@@ -19,17 +19,22 @@ def plot_hist_and_dct(img, title):
     plt.figure(figsize=(12,4))
     plt.subplot(1,2,1)
     plt.title(f"Ιστόγραμμα - {title}")
-    plt.hist(img.flatten(),256,[0,256], color='gray')
+    plt.hist(img.flatten(), bins=256, range=[0,256], color='gray')  # Fix Matplotlib warning
     plt.xlim([0,256])
     # DCT2
-    dct = cv2.dct(np.float32(img)/255.0)
+    h, w = img.shape
+    pad_h = h if h % 2 == 0 else h + 1
+    pad_w = w if w % 2 == 0 else w + 1
+    img_padded = np.zeros((pad_h, pad_w), dtype=np.float32)
+    img_padded[:h, :w] = img
+    dct = cv2.dct(img_padded/255.0)
     plt.subplot(1,2,2)
     plt.title(f"DCT2 - {title}")
     plt.imshow(np.log(np.abs(dct)+1), cmap='gray')
     plt.colorbar()
     plt.show()
 
-for fname in ['im1.jpg', 'im2.jpg']:
+for fname in ['Code/Images/input/im1.jpg', 'Code/Images/input/im2.jpg']:
     img = cv2.imread(fname, cv2.IMREAD_GRAYSCALE)
     if img is None:
         print(f"Δεν βρέθηκε η εικόνα {fname}")

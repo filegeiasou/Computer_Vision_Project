@@ -1,2 +1,9 @@
+# Ignore files and directories that should not be tracked by Git
+# General
 ~$oject_Report.docx
 .DS_Store
+
+# Python
+__pycache__/
+.venv
+requirements.txt

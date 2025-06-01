@@ -31,7 +31,7 @@ def homomorphic_filter(image, gamma_l=0.5, gamma_h=2.0, cutoff=30, order=1):
     return img_back.astype(np.uint8)
 
 # === Φόρτωση και προεπεξεργασία εικόνας ===
-image = cv2.imread('car.jpg', cv2.IMREAD_GRAYSCALE)
+image = cv2.imread('Code/Images/input/car.jpg', cv2.IMREAD_GRAYSCALE)
 
 filtered_image = homomorphic_filter(image)
 
