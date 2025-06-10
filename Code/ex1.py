@@ -2,46 +2,71 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-def add_awgn_noise(image, snr_db):
-    """Προσθήκη θορύβου AWGN με βάση το επιθυμητό SNR σε dB""" 
-    image = image.astype(np.float32)
-    signal_power = np.mean(image ** 2)
-    snr_linear = 10 ** (snr_db / 10.0)
-    noise_power = signal_power / snr_linear
-    noise = np.random.normal(0, np.sqrt(noise_power), image.shape)
-    noisy_image = image + noise
-    noisy_image = np.clip(noisy_image, 0, 255)
-    return noisy_image.astype(np.uint8)
-
-def mean_filter(image, ksize):
+def mean_filter(img, ksize):
     """Εφαρμογή μάσκας μέσου όρου"""
-    return cv2.blur(image, (ksize, ksize))
+    return cv2.blur(img, (ksize, ksize))
 
-def compute_mse(image1, image2):
-    """Υπολογισμός Μέσου Τετραγωνικού Σφάλματος"""
-    return np.mean((image1.astype(np.float32) - image2.astype(np.float32)) ** 2)
+def add_awgn_noise(img, snr_db):
+    """Προσθήκη AWGN με βάση το SNR που δίνεται""" 
+    img = img.astype(np.float32) 
+    # Υπολογισμός ισχύος σήματος 
+    signal_power = np.mean(img ** 2) 
+    # Από db σε γραμμική κλίμακα
+    snr_linear = 10 ** (snr_db / 10.0)
+    # Υπολογισμός ισχύος θορύβου με βάση το SNR
+    noise_power = signal_power  / snr_linear
 
-# === Φόρτωση της εικόνας ===
-original = cv2.imread('Code/Images/input/flowers.jpg')
-original = cv2.cvtColor(original, cv2.COLOR_BGR2GRAY)  # για απλοποίηση (γκρι)
+    """ Δημιουργία θορύβου AWGN"""
+    # κανονική κατανομή θορύβου με μέσο 0 και τυπική απόκλιση sqrt(ισχύος θορύβου)
+    noise = np.random.normal(0, np.sqrt(noise_power), img.shape)
+    # Προσθήκη του θορύβου στην εικόνα
+    noisy_img = img + noise
+    # επειδη η αρχική εικονα ειναι σε grayscale, επιβεβαιωνόμαστε οτι ειναι σε εύρος [0, 255]
+    noisy_img = np.clip(noisy_img, 0, 255)
+    return noisy_img.astype(np.uint8)
 
-ksizes = [5, 7, 9]
-snrs = [10, 15, 18]
+def compute_mse(img1, img2):
+    """Υπολογισμός Μέσου Τετραγωνικού Σφάλματος απο την αρχική και την φιλτραρισμένη εικόνα"""
+    return np.mean((img1.astype(np.float32) - img2.astype(np.float32)) ** 2)
 
-results = {}
+def main():
+    # === Φόρτωση της εικόνας ===
+    og_img = cv2.imread('Code/Images/input/flowers.jpg') 
+    og_img = cv2.cvtColor(og_img, cv2.COLOR_BGR2GRAY)  # μετατροπή σε grayscale
 
-# === Βρόχος για κάθε SNR και μέγεθος μάσκας ===
-for snr in snrs:
-    noisy = add_awgn_noise(original, snr)
-    for k in ksizes:
-        filtered = mean_filter(noisy, k)
-        mse = compute_mse(original, filtered)
-        key = f"SNR={snr}dB, Kernel={k}x{k}"
-        results[key] = mse
+    ksizes = [5, 7, 9]  # τα διαφορετικά μήκοι μάσκας
+    snrs = [10, 15, 18] # τα διαφορετικά SNRs σε dB
+    res = {}
 
-        # Αποθήκευση ή εμφάνιση (προαιρετικά)
-        print(f"{key} -> MSE: {mse:.2f}")
-        cv2.imshow(key, filtered)
-        cv2.waitKey(0)
+    # === Βρόχος για κάθε SNR και μέγεθος μάσκας ===
+    i = 0
+    for snr in snrs:
+        noisy_img = add_awgn_noise(og_img, snr)
+        for k in ksizes:
+            # Εφαρμογή μάσκας μέσου όρου και υπολογισμός MSE
+            filter_img = mean_filter(noisy_img, k)
+            mse = compute_mse(og_img, filter_img)
 
-cv2.destroyAllWindows()
+            # Εμφάνιση και αποθήκευση αποτελεσμάτων 
+            title = f"SNR={snr}dB, Size={k}, MSE: {mse:.2f}"
+            print(title)
+            res[i] = title
+            cv2.imshow(title, filter_img)
+            cv2.imwrite(f'Code/Images/output/ex1/{i}.jpeg', filter_img)
+            cv2.waitKey(0) # πατα οποιοδήποτε πλήκτρο για να συνεχίσει στο επόμενο αποτέλεσμα
+            i += 1
+    cv2.destroyAllWindows()
+
+if __name__ == "__main__":
+    main()
+
+# Output:
+# SNR=10dB, Size=5, MSE: 162.63
+# SNR=10dB, Size=7, MSE: 164.03
+# SNR=10dB, Size=9, MSE: 175.25
+# SNR=15dB, Size=5, MSE: 116.15
+# SNR=15dB, Size=7, MSE: 133.40
+# SNR=15dB, Size=9, MSE: 150.30
+# SNR=18dB, Size=5, MSE: 106.21
+# SNR=18dB, Size=7, MSE: 127.44
+# SNR=18dB, Size=9, MSE: 145.74
