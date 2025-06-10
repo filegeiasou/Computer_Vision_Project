@@ -48,14 +48,15 @@ def main():
             mse = compute_mse(og_img, filter_img)
 
             # Εμφάνιση και αποθήκευση αποτελεσμάτων 
-            title = f"SNR={snr}db, Size={k}, MSE: {mse:.2f}"
-            res[i] = title
-            print(res[i])
-            cv2.imshow(title, filter_img)
-            cv2.imwrite(f'Code/Images/output/ex1/{i}_{snr}db_{k}_{mse:.2f}.jpeg', filter_img)
+            res[i] = f"SNR={snr}db, Size={k}, MSE: {mse:.2f}"
+            cv2.imshow(res[i], filter_img)
+            cv2.imwrite(f'Code/Images/output/ex1/{i}_{snr}db_size{k}.jpeg', filter_img)
             cv2.waitKey(0) # πατα οποιοδήποτε πλήκτρο για να συνεχίσει στο επόμενο αποτέλεσμα
-            i += 1    
+            i += 1       
     cv2.destroyAllWindows()
+    # === Εμφάνιση αποτελεσμάτων ===
+    for k in res:
+        print(res[k])
 
 if __name__ == "__main__":
     main()
@@ -69,4 +70,4 @@ if __name__ == "__main__":
 # SNR=15dB, Size=9, MSE: 150.30
 # SNR=18dB, Size=5, MSE: 106.21
 # SNR=18dB, Size=7, MSE: 127.44
-# SNR=18dB, Size=9, MSE: 145.74
+# SNR=18dB, Size=9, MSE: 145.74 
