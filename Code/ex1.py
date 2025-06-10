@@ -32,6 +32,9 @@ def compute_mse(img1, img2):
 def main():
     # === Φόρτωση της εικόνας ===
     og_img = cv2.imread('Code/Images/input/flowers.jpg') 
+    if og_img is None:
+        print("Δεν βρέθηκε η εικόνα")
+        return
     og_img = cv2.cvtColor(og_img, cv2.COLOR_BGR2GRAY)  # μετατροπή σε grayscale
 
     ksizes = [5, 7, 9]  # τα διαφορετικά μήκοι μάσκας
@@ -49,8 +52,9 @@ def main():
 
             # Εμφάνιση και αποθήκευση αποτελεσμάτων 
             res[i] = f"SNR={snr}db, Size={k}, MSE: {mse:.2f}"
+            out_path = f'Code/Images/output/ex1/{i}_{snr}db_size{k}.jpeg'
             cv2.imshow(res[i], filter_img)
-            cv2.imwrite(f'Code/Images/output/ex1/{i}_{snr}db_size{k}.jpeg', filter_img)
+            cv2.imwrite(out_path, filter_img)
             cv2.waitKey(0) # πατα οποιοδήποτε πλήκτρο για να συνεχίσει στο επόμενο αποτέλεσμα
             i += 1       
     cv2.destroyAllWindows()
