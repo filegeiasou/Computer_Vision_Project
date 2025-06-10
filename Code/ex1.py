@@ -29,6 +29,14 @@ def compute_mse(img1, img2):
     """Υπολογισμός Μέσου Τετραγωνικού Σφάλματος απο την αρχική και την φιλτραρισμένη εικόνα"""
     return np.mean((img1.astype(np.float32) - img2.astype(np.float32)) ** 2)
 
+def plot_images(img, title):
+        # Plot με matplotlib
+        plt.figure()
+        plt.imshow(img, cmap='gray')
+        plt.title(title)
+        plt.axis('off')
+        plt.show()
+    
 def main():
     # === Φόρτωση της εικόνας ===
     og_img = cv2.imread('Code/Images/input/flowers.jpg') 
@@ -53,11 +61,9 @@ def main():
             # Εμφάνιση και αποθήκευση αποτελεσμάτων 
             res[i] = f"SNR={snr}db, Size={k}, MSE: {mse:.2f}"
             out_path = f'Code/Images/output/ex1/{i}_{snr}db_size{k}.jpeg'
-            cv2.imshow(res[i], filter_img)
+            plot_images(filter_img, res[i])
             cv2.imwrite(out_path, filter_img)
-            cv2.waitKey(0) # πατα οποιοδήποτε πλήκτρο για να συνεχίσει στο επόμενο αποτέλεσμα
             i += 1       
-    cv2.destroyAllWindows()
     # === Εμφάνιση αποτελεσμάτων ===
     for k in res:
         print(res[k])
