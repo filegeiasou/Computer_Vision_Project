@@ -13,17 +13,17 @@ def compute_mse(img1, img2):
     """Υπολογισμός Μέσου Τετραγωνικού Σφάλματος απο την αρχική και την φιλτραρισμένη εικόνα"""
     return np.mean((img1.astype(np.float32) - img2.astype(np.float32)) ** 2)
 
-def plot_images(original, sharpened):
+def plot_images(og, sharp):
     """Εμφάνιση των εικόνων"""
     plt.figure(figsize=(8, 4))
     plt.subplot(1, 2, 1)
     plt.title("Original")
-    plt.imshow(original, cmap='gray')
+    plt.imshow(og, cmap='gray')
     plt.axis('off')
     
     plt.subplot(1, 2, 2)
     plt.title("Sharpened")
-    plt.imshow(sharpened, cmap='gray')
+    plt.imshow(sharp, cmap='gray')
     plt.axis('off')
     
     plt.tight_layout()
@@ -39,7 +39,7 @@ def main():
         if img is None:
             print(f"Δεν βρέθηκε η εικόνα {fname}")
             continue
-        # Ελέγχουμε αν η εικόνα είναι έγχρωμη ή ασπρόμαυρη
+        # Ελέγχουμε αν η εικόνα είναι έγχρωμη
         if len(img.shape) == 3:
             # μετατροπή σε grayscale
             img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) 
@@ -47,8 +47,9 @@ def main():
              # είναι ήδη σε grayscale
             img_gray = img                                  
 
-        # Εφαρμογή όξυνσης
+        # Εφαρμογή όξυνσης με unsharp mask
         sharp = sharpen_image(img_gray)
+        # Υπολογισμός MSE
         mse = compute_mse(img_gray, sharp)
 
         # Εμφάνιση και αποθήκευση
