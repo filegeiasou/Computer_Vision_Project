@@ -30,22 +30,23 @@ def plot_images(og, sharp):
     plt.show()
 
 def main():
+    img_paths = [
+        'Code/Images/bridge.tif',
+        'Code/Images/im1.jpg',
+        'Code/Images/im2.jpg'
+    ]
     res = {}
     i = 0
-    for fname in img_files:
-        # Φόρτωση και μετατροπή σε grayscale αν χρειάζεται
+    # === Βρόχος για κάθε εικόνα ===
+    for fname in img_paths:
+        # === Φόρτωση εικόνας ===
         img = cv2.imread(fname)
         # αν η εικόνα δεν βρέθηκε, συνεχίζουμε στην επόμενη
         if img is None:
             print(f"Δεν βρέθηκε η εικόνα {fname}")
             continue
-        # Ελέγχουμε αν η εικόνα είναι έγχρωμη
-        if len(img.shape) == 3:
-            # μετατροπή σε grayscale
-            img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) 
-        else:
-             # είναι ήδη σε grayscale
-            img_gray = img                                  
+        # Μετατροπή σε grayscale αν χρειάζεται
+        img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)                               
 
         # Εφαρμογή όξυνσης με unsharp mask
         sharp = sharpen_image(img_gray)
@@ -54,19 +55,12 @@ def main():
 
         # Εμφάνιση και αποθήκευση
         res[i] = f"{fname}: MSE = {mse:.2f}"
-        out_path = f'Code/Images/output/ex3/{i}_{fname.split("/")[-1]}' # αποθήκευση με το ίδιο όνομα
         # Εμφάνιση εικόνων
         plot_images(img_gray, sharp)
-        cv2.imwrite(out_path, sharp)
         i += 1
     # === Εμφάνιση αποτελεσμάτων ===
     for k in res:
         print(res[k])
 
 if __name__ == "__main__":
-    img_files = [
-        'Code/Images/input/bridge.tif',
-        'Code/Images/input/im1.jpg',
-        'Code/Images/input/im2.jpg'
-    ]
     main()

@@ -29,7 +29,7 @@ def compute_mse(img1, img2):
     """Υπολογισμός Μέσου Τετραγωνικού Σφάλματος απο την αρχική και την φιλτραρισμένη εικόνα"""
     return np.mean((img1.astype(np.float32) - img2.astype(np.float32)) ** 2)
 
-def plot_images(img, title):
+def plot_image(img, title):
         # Plot με matplotlib
         plt.figure()
         plt.imshow(img, cmap='gray')
@@ -39,15 +39,17 @@ def plot_images(img, title):
     
 def main():
     # === Φόρτωση της εικόνας ===
-    og_img = cv2.imread('Code/Images/input/flowers.jpg') 
+    og_img = cv2.imread('Code/Images/flowers.jpg') 
+    # Ελέγχουμε αν η εικόνα φορτώθηκε σωστά
     if og_img is None:
         print("Δεν βρέθηκε η εικόνα")
         return
-    og_img = cv2.cvtColor(og_img, cv2.COLOR_BGR2GRAY)  # μετατροπή σε grayscale
+    # Μετατροπή σε grayscale αν χρειάζεται
+    og_img = cv2.cvtColor(og_img, cv2.COLOR_BGR2GRAY) 
 
     ksizes = [5, 7, 9]  # τα διαφορετικά μήκοι μάσκας
     snrs = [10, 15, 18] # τα διαφορετικά SNRs σε dB
-    res = {}
+    res = {} # αποτελέσματα
 
     # === Βρόχος για κάθε SNR και μέγεθος μάσκας ===
     i = 0
@@ -58,26 +60,13 @@ def main():
             filter_img = mean_filter(noisy_img, k)
             mse = compute_mse(og_img, filter_img)
 
-            # Εμφάνιση και αποθήκευση αποτελεσμάτων 
+            # Εμφάνιση αποτελεσμάτων 
             res[i] = f"SNR={snr}db, Size={k}, MSE: {mse:.2f}"
-            out_path = f'Code/Images/output/ex1/{i}_{snr}db_size{k}.jpeg'
-            plot_images(filter_img, res[i])
-            cv2.imwrite(out_path, filter_img)
+            plot_image(filter_img, res[i])
             i += 1       
-    # === Εμφάνιση αποτελεσμάτων ===
+    # === Εμφάνιση αποτελεσμάτων σε κείμενο ===
     for k in res:
         print(res[k])
 
 if __name__ == "__main__":
     main()
-
-# Output:
-# SNR=10dB, Size=5, MSE: 162.63
-# SNR=10dB, Size=7, MSE: 164.03
-# SNR=10dB, Size=9, MSE: 175.25
-# SNR=15dB, Size=5, MSE: 116.15
-# SNR=15dB, Size=7, MSE: 133.40
-# SNR=15dB, Size=9, MSE: 150.30
-# SNR=18dB, Size=5, MSE: 106.21
-# SNR=18dB, Size=7, MSE: 127.44
-# SNR=18dB, Size=9, MSE: 145.74 
