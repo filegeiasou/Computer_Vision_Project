@@ -31,9 +31,9 @@ def plot_images(og, sharp):
 
 def main():
     img_paths = [
-        'Code/Images/bridge.tif',
-        'Code/Images/im1.jpg',
-        'Code/Images/im2.jpg'
+        'Images/bridge.tif',
+        'Images/im1.jpg',
+        'Images/im2.jpg'
     ]
     res = {}
     i = 0

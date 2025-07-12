@@ -39,7 +39,7 @@ def plot_image(img, title):
     
 def main():
     # === Φόρτωση της εικόνας ===
-    og_img = cv2.imread('Code/Images/flowers.jpg') 
+    og_img = cv2.imread('Images/flowers.jpg') 
     # Ελέγχουμε αν η εικόνα φορτώθηκε σωστά
     if og_img is None:
         print("Δεν βρέθηκε η εικόνα")

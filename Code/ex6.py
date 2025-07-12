@@ -61,10 +61,8 @@ def plot_results(img_name, original, manual_eq, cv_eq, histograms, dct2_images):
 
 def main():
     # === Φόρτωση εικόνων ===
-    img1_path = Path("Code/Images/im1.jpg")
-    img2_path = Path("Code/Images/im2.jpg")
-    img1 = cv2.imread(str(img1_path))
-    img2 = cv2.imread(str(img2_path))
+    img1 = cv2.imread("Images/im1.jpg")
+    img2 = cv2.imread("Images/im2.jpg")
 
     # Ελέγχουμε αν οι εικόνες φορτώθηκαν σωστά
     if img1 is None or img2 is None:

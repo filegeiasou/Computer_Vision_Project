@@ -43,13 +43,14 @@ def homomorphic_filter(img, gamma_l=0.5, gamma_h=2.0, cutoff=30, order=1):
     return img_back
 
 def main():
-    # === Φόρτωση και προεπεξεργασία εικόνας ===
-    img_path = 'Code/Images/car.jpg'
-    img = cv2.imread(str(img_path), cv2.IMREAD_GRAYSCALE)
+    # === Φόρτωση εικόνας ===
+    img = cv2.imread('Images/car.jpg')
     # Ελέγχουμε αν η εικόνα φορτώθηκε σωστά
     if img is None:
         print("Δεν βρέθηκε η εικόνα")
         return
+    # Μετατροπή σε grayscale αν χρειάζεται
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) 
     filter_img = homomorphic_filter(img)
 
     # === Εμφάνιση αποτελεσμάτων ===
